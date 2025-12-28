@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Koltuk Seçimi</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 40px 10px;
+            box-sizing: border-box;
+        }
+
+        .ticket-card {
+            width: 100%;
+            max-width: 1000px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 22px;
+            box-shadow: 0 16px 34px rgba(0,0,0,0.30);
+            position: relative;
+        }
+
+        .ticket-card::before,
+        .ticket-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 24px;
+            height: 24px;
+            background: #f2f2f2;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ticket-card::before {
+            left: -12px;
+        }
+
+        .ticket-card::after {
+            right: -12px;
+        }
+
+        h2 {
+            margin: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #b31217;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bus-icon {
+            font-size: 34px;
+        }
+
+        .sefer-bilgi {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .sefer-bilgi span.label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .sefer-bilgi span.value {
+            color: #222;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px dashed #ccc;
+            margin: 20px 0;
+        }
+
+        .seat-container-wrapper {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .seat-legend {
+            min-width: 180px;
+            font-size: 13px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 6px;
+        }
+
+        .legend-box {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+        }
+
+        .legend-empty {
+            background-color: #f7f7f7;
+        }
+
+        .legend-full {
+            background-color: #d9534f;
+        }
+
+        .legend-selected {
+            background-color: #5cb85c;
+        }
+
+        .seat-area {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .seat-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .seat-pair,
+        .seat-single {
+            display: flex;
+            gap: 6px;
+        }
+
+        .aisle {
+            width: 18px;
+        }
+
+        .seat {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid #999;
+            background-color: #f7f7f7;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .seat:hover:not(.seat-full):not(:disabled) {
+            box-shadow: 0 0 6px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+
+        .seat-full {
+            background-color: #d9534f;
+            color: #fff;
+            cursor: not-allowed;
+        }
+
+        .seat:disabled {
+            opacity: 0.8;
+        }
+
+        .mesaj {
+            margin-top: 10px;
+            color: #d9534f;
+            font-size: 13px;
+        }
+
+        .alt-buton {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            color: white;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.20);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 700px) {
+            .seat-container-wrapper {
+                flex-direction: column;
+            }
+            .seat-row {
+                transform: scale(0.95);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ticket-card">
+    <h2>
+        Koltuk Seçimi
+        <span class="bus-icon">🚌</span>
+    </h2>
+
+    <!-- Sefer Bilgileri -->
+    <div class="sefer-bilgi">
+        <div><span class="label">Kalkış:</span> <span class="value">{{ kalkis }}</span></div>
+        <div><span class="label">Varış:</span> <span class="value">{{ varis }}</span></div>
+        <div><span class="label">Tarih:</span> <span class="value">{{ tarih }}</span></div>
+        <div><span class="label">Saat:</span> <span class="value">{{ saat }}</span></div>
+        <div><span class="label">Firma:</span> <span class="value">{{ firma }}</span></div>
+        <div><span class="label">Süre:</span> <span class="value">{{ sure }} saat</span></div>
+        <div><span class="label">Fiyat:</span> <span class="value">{{ fiyat }} TL</span></div>
+    </div>
+
+    <hr>
+
+    <form method="post">
+        <div class="seat-container-wrapper">
+            <!-- Legend -->
+            <div class="seat-legend">
+                <div class="legend-item">
+                    <div class="legend-box legend-empty"></div>
+                    <span>Boş Koltuk</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box legend-full"></div>
+                    <span>Dolu Koltuk</span>
+                </div>
+                <p style="margin-top: 16px; font-size: 12px; color:#555;">
+                    Koltuğun üzerine tıklayarak seçim yapabilirsiniz.
+                </p>
+            </div>
+
+            <!-- Koltuk Düzeni (2+1) -->
+            <div class="seat-area">
+                {% set total_seats = 40 %}
+                {% for start in range(1, total_seats + 1, 3) %}
+                    <div class="seat-row">
+                        <!-- Sol tarafta ikili koltuk -->
+                        <div class="seat-pair">
+                            {% for offset in [0,1] %}
+                                {% set num = start + offset %}
+                                {% if num <= total_seats %}
+                                    {% set dolu = (num in dolu_koltuklar) %}
+                                    <button
+                                        type="submit"
+                                        name="koltuk_no"
+                                        value="{{ num }}"
+                                        class="seat{% if dolu %} seat-full{% endif %}"
+                                        {% if dolu %}disabled{% endif %}
+                                    >
+                                        {{ num }}
+                                    </button>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="aisle"></div>
+
+                        <!-- Sağda tekli koltuk -->
+                        <div class="seat-single">
+                            {% set num = start + 2 %}
+                            {% if num <= total_seats %}
+                                {% set dolu = (num in dolu_koltuklar) %}
+                                <button
+                                    type="submit"
+                                    name="koltuk_no"
+                                    value="{{ num }}"
+                                    class="seat{% if dolu %} seat-full{% endif %}"
+                                    {% if dolu %}disabled{% endif %}
+                                >
+                                    {{ num }}
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if mesaj %}
+            <div class="mesaj">{{ mesaj }}</div>
+        {% endif %}
+    </form>
+
+</div>
+
+</body>
+</html>
+
+

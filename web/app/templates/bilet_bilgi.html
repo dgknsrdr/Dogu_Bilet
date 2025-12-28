@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Bilet Onayı</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 0 15px;
+        }
+        .bilet-card {
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 16px 34px rgba(0,0,0,0.25);
+            padding: 24px 26px 30px;
+            position: relative;
+        }
+        .bilet-card::before,
+        .bilet-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 24px;
+            height: 24px;
+            background: #f2f2f2;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .bilet-card::before {
+            left: -12px;
+        }
+        .bilet-card::after {
+            right: -12px;
+        }
+        h1 {
+            margin: 0 0 14px;
+            font-size: 22px;
+            color: #b31217;
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .satir {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .etiket {
+            font-weight: bold;
+            color: #333;
+        }
+        .degger {
+            color: #444;
+        }
+        .divider {
+            margin: 18px 0;
+            border-top: 1px dashed #ddd;
+        }
+        .fiyat-kisim {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .fiyat-metin {
+            font-size: 16px;
+            font-weight: bold;
+            color: #b31217;
+        }
+        .btn {
+            padding: 9px 18px;
+            border-radius: 999px;
+            border: none;
+            font-size: 14px;
+            background: #b31217;
+            color: #fff;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #e52d27;
+        }
+        .geri-link {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            font-size: 13px;
+            text-decoration: none;
+            color: #b31217;
+        }
+        .geri-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="bilet-card">
+        <h1>Bilet Onayı</h1>
+        <div class="subtitle">
+            Aşağıdaki sefer için bilet satın almak üzeresiniz. Lütfen bilgileri kontrol edin.
+        </div>
+
+        <div class="satir">
+            <span class="etiket">Kalkış:</span>
+            <span class="degger">{{ kalkis }}</span>
+        </div>
+        <div class="satir">
+            <span class="etiket">Varış:</span>
+            <span class="degger">{{ varis }}</span>
+        </div>
+        <div class="satir">
+            <span class="etiket">Tarih:</span>
+            <span class="degger">{{ tarih }}</span>
+        </div>
+        <div class="satir">
+            <span class="etiket">Saat:</span>
+            <span class="degger">{{ saat }}</span>
+        </div>
+        <div class="satir">
+            <span class="etiket">Firma:</span>
+            <span class="degger">{{ firma }}</span>
+        </div>
+        <div class="satir">
+            <span class="etiket">Koltuk No:</span>
+            <span class="degger">{{ koltuk_no }}</span>
+        </div>
+        <div class="satir">
+            <span class="etiket">Süre:</span>
+            <span class="degger">{{ sure }} saat</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="fiyat-kisim">
+            <div class="fiyat-metin">Toplam Fiyat: {{ fiyat }} ₺</div>
+            <form method="post">
+                <button type="submit" class="btn">Satın Al ve Bileti Oluştur</button>
+            </form>
+        </div>
+    </div>
+
+    <a href="{{ url_for('bilet_ekrani') }}" class="geri-link">← Yeni arama yap</a>
+</div>
+
+</body>
+</html>

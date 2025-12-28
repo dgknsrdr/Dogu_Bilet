@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Paneli</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 15px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 16px 34px rgba(0,0,0,0.25);
+            padding: 24px 28px 30px;
+        }
+        h1 {
+            margin: 0 0 14px;
+            font-size: 24px;
+            color: #b31217;
+        }
+        h2 {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #b31217;
+        }
+        .geri-link {
+            font-size: 13px;
+            text-decoration: none;
+            color: #b31217;
+        }
+        .geri-link:hover {
+            text-decoration: underline;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .istatistik-grid {
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .istatistik-kutu {
+            background: #ffe6e6;
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid #f5b5b5;
+        }
+        .istatistik-baslik {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .istatistik-sayi {
+            font-size: 22px;
+            font-weight: bold;
+            color: #b31217;
+        }
+        .istatistik-aciklama {
+            font-size: 11px;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        /* 📊 Grafik Alanı */
+        .grafik-alani {
+            margin-top: 25px;
+            padding: 18px;
+            background: #fafafa;
+            border-radius: 18px;
+            border: 1px solid #eee;
+            text-align: center;
+        }
+        .grafik-alani img {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1>Admin Paneli</h1>
+            <a href="{{ url_for('kullanici_panel') }}" class="geri-link">← Kullanıcı paneline dön</a>
+        </div>
+
+        <!-- 📌 İSTATİSTİK KARTLARI -->
+        <div class="istatistik-grid">
+            <div class="istatistik-kutu">
+                <div class="istatistik-baslik">Toplam Kullanıcı</div>
+                <div class="istatistik-sayi">{{ toplam_kullanici }}</div>
+                <div class="istatistik-aciklama">Sisteme kayıtlı kullanıcı sayısı.</div>
+            </div>
+
+            <div class="istatistik-kutu">
+                <div class="istatistik-baslik">Toplam Sefer</div>
+                <div class="istatistik-sayi">{{ toplam_sefer }}</div>
+                <div class="istatistik-aciklama">Veritabanındaki sefer sayısı.</div>
+            </div>
+
+            <div class="istatistik-kutu">
+                <div class="istatistik-baslik">Toplam Bilet</div>
+                <div class="istatistik-sayi">{{ toplam_bilet }}</div>
+                <div class="istatistik-aciklama">Satılan bilet sayısı (iade dahil).</div>
+            </div>
+
+            <div class="istatistik-kutu">
+                <div class="istatistik-baslik">İade Edilen Bilet</div>
+                <div class="istatistik-sayi">{{ iade_edilen_bilet_sayisi }}</div>
+                <div class="istatistik-aciklama">İade edilmiş bilet adedi.</div>
+            </div>
+
+            <div class="istatistik-kutu">
+                <div class="istatistik-baslik">Bugünkü Sefer Sayısı</div>
+                <div class="istatistik-sayi">{{ bugun_sefer_sayisi }}</div>
+                <div class="istatistik-aciklama">Bugünün tarihine ait sefer sayısı.</div>
+            </div>
+        </div>
+
+        <!-- 📊 GRAFİK -->
+        <h2>📊 Günlük Bilet İstatistikleri</h2>
+        <div class="grafik-alani">
+            <img
+  src="data:image/png;base64,{{ grafik }}"
+  style="max-width:100%; border-radius:16px;"
+>
+                 alt="Günlük Bilet Grafiği">
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
+

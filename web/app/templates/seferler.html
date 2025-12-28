@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Seferler</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding-top: 40px;
+        }
+
+        .ticket-card {
+            width: 90%;
+            max-width: 1000px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 22px;
+            box-shadow: 0 16px 34px rgba(0,0,0,0.30);
+            position: relative;
+        }
+
+        .ticket-card::before,
+        .ticket-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 24px;
+            height: 24px;
+            background: #f2f2f2;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ticket-card::before {
+            left: -12px;
+        }
+
+        .ticket-card::after {
+            right: -12px;
+        }
+
+        h2 {
+            margin: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #b31217;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bus-icon {
+            font-size: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        thead tr {
+            background: #b31217;
+            color: white;
+            font-size: 15px;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        tbody tr:hover {
+            background-color: #ffe6e6;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            color: white;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.20);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="ticket-card">
+    <h2>
+        Seferler Listesi
+        <span class="bus-icon">🚌</span>
+    </h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Kalkış</th>
+            <th>Varış</th>
+            <th>Tarih</th>
+            <th>Saat</th>
+            <th>Firma</th>
+            <th>Fiyat</th>
+            <th>Süre</th>
+            <th>İşlem</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for satir in seferler %}
+            <tr>
+                <td>{{ satir['Kalkis'] }}</td>
+                <td>{{ satir['Varis'] }}</td>
+                <td>{{ satir['Tarih'] }}</td>
+                <td>{{ satir['Saat'] }}</td>
+                <td>{{ satir['Firma'] }}</td>
+                <td>{{ satir['Fiyat'] }} ₺</td>
+                <td>{{ satir['Sure'] }} saat</td>
+                <td>
+                    <a href="{{ url_for('koltuk_sec', sefer_id=satir['Sefer_ID']) }}" class="btn-primary">
+                        Koltuk Seç
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

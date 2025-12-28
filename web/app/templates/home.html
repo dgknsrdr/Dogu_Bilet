@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DoğuBilet | Giriş</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 16px;
+        }
+
+        .ticket-card {
+            position: relative;
+            background: #ffffff;
+            padding: 32px 28px 26px;
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        /* Bilet kenar süsleri */
+        .ticket-card::before,
+        .ticket-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f2f2f2;
+            transform: translateY(-50%);
+        }
+
+        .ticket-card::before {
+            left: -12px;
+        }
+
+        .ticket-card::after {
+            right: -12px;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand span:first-child {
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        .brand span:last-child {
+            font-size: 20px;
+            font-weight: bold;
+            color: #b31217;
+        }
+
+        .bus-icon {
+            font-size: 32px;
+        }
+
+        .divider {
+            margin: 12px 0 22px;
+            border-top: 1px dashed #ddd;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #b31217;
+            box-shadow: 0 0 0 2px rgba(179, 18, 23, 0.15);
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 11px 0;
+            border: none;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .bottom-row {
+            margin-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .bottom-row a {
+            color: #b31217;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .bottom-row a:hover {
+            text-decoration: underline;
+        }
+
+        .msg-error {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #d00000;
+            text-align: center;
+        }
+
+        .small-note {
+            font-size: 11px;
+            color: #777;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="ticket-card">
+            <div class="ticket-header">
+                <div class="brand">
+                    <span>ONLINE CHECK-IN</span>
+                    <span>DoğuBilet</span>
+                </div>
+                <div class="bus-icon">🚌</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- FORM KISMI: action, method, name/id'ler aynı bırakıldı -->
+            <form action="/" method="post" align="center">
+                <div class="field-group">
+                    <label for="mail">E-Postanızı giriniz :</label>
+                    <input
+                        type="email"
+                        name="mail"
+                        id="mail"
+                        placeholder="ex@gmail.com"
+                        required
+                        class="input-field"
+                    >
+                </div>
+
+                <div class="field-group">
+                    <label for="sifre">Şifre Giriniz :</label>
+                    <input
+                        type="password"
+                        name="user_sifre"
+                        id="sifre"
+                        placeholder="********"
+                        maxlength="20"
+                        minlength="8"
+                        required
+                        pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s]).{8,20}$"
+                        title="Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir noktalama işareti içermelidir."
+                        class="input-field"
+                    >
+                    <div class="small-note">
+                        En az 8 karakter, 1 büyük harf, 1 küçük harf, 1 rakam ve 1 özel karakter içermelidir.
+                    </div>
+                </div>
+
+                <input type="submit" value="Giriş Yap" class="submit-btn">
+
+                <div class="bottom-row">
+                    <span>Hesabın yok mu?</span>
+                    <a href="{{url_for('kayit')}}">Kayıt Olmak İçin</a>
+                </div>
+
+                {% if mesaj %}
+                    <div class="msg-error">{{ mesaj }}</div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

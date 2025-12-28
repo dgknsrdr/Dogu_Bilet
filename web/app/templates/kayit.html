@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DoğuBilet | Kayıt Ol</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 430px;
+            padding: 16px;
+        }
+
+        .ticket-card {
+            background: #fff;
+            padding: 32px 28px 28px;
+            border-radius: 25px;
+            box-shadow: 0 18px 38px rgba(0,0,0,0.25);
+            position: relative;
+        }
+
+        /* Kart deliği efekti */
+        .ticket-card::before,
+        .ticket-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 26px;
+            height: 26px;
+            background: #f2f2f2;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ticket-card::before {
+            left: -13px;
+        }
+
+        .ticket-card::after {
+            right: -13px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand span:first-child {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #888;
+        }
+
+        .brand span:last-child {
+            font-size: 22px;
+            font-weight: bold;
+            color: #b31217;
+        }
+
+        .bus {
+            font-size: 34px;
+        }
+
+        .divider {
+            margin: 14px 0 22px;
+            border-top: 1px dashed #ccc;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .input-field:focus {
+            border-color: #b31217;
+            box-shadow: 0 0 0 2px rgba(179,18,23,0.18);
+        }
+
+        .group {
+            margin-bottom: 16px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px 0;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            color: #fff;
+            font-weight: bold;
+            font-size: 15px;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        input[type="submit"]:hover {
+            box-shadow: 0 12px 18px rgba(0,0,0,0.2);
+            transform: translateY(-1px);
+        }
+
+        input[type="submit"]:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        #hata_mesaji {
+            margin-top: 8px;
+            text-align: center;
+            color: #d00000;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<div class="form-wrapper">
+    <div class="ticket-card">
+
+        <div class="header">
+            <div class="brand">
+                <span>Kayıt Oluştur</span>
+            </div>
+            <div class="bus">🚌</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- FORM --- hiçbir şey değişmeden -->
+        <form action="/kayit" method="post" align="center" onsubmit="return sifreKontrol()">
+
+            <div class="group">
+                <label for="isim">AD:</label>
+                <input type="text" name="user_name" id="isim" required placeholder="Doğukan" class="input-field">
+            </div>
+
+            <div class="group">
+                <label for="soyisim">SOYAD:</label>
+                <input type="text" name="user_surname" id="soyisim" required placeholder="SERDAR" class="input-field">
+            </div>
+
+            <div class="group">
+                <label for="yas">Doğum Tarihi:</label>
+                <input type="date" name="user_birthday" id="yas" required class="input-field">
+            </div>
+
+            <div class="group">
+                <label for="mail">E-Posta Adresi:</label>
+                <input type="email" name="user_mail" id="mail" required placeholder="ex@gmail.com" class="input-field">
+            </div>
+
+            <div class="group">
+                <label for="sifre">Şifre Giriniz:</label>
+                <input type="password" name="user_password" id="sifre" required
+                       placeholder="********" maxlength="20" minlength="8"
+                       pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s]).{8,20}$"
+                       class="input-field">
+            </div>
+
+            <div class="group">
+                <label for="yenile_sifre">Şifre Tekrar:</label>
+                <input type="password" name="user_password2" id="yenile_sifre" required
+                       placeholder="********" maxlength="20" minlength="8"
+                       pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s]).{8,20}$"
+                       title="Bir küçük Bir büyük harf bir sayı ve bir noktalama işareti bulunmalı"
+                       class="input-field">
+            </div>
+
+            <div id="hata_mesaji"></div>
+
+            <br>
+
+            <input type="submit" value="Kayıt Ol">
+        </form>
+    </div>
+</div>
+
+<script>
+function sifreKontrol() {
+    let s1 = document.getElementById("sifre").value;
+    let s2 = document.getElementById("yenile_sifre").value;
+    let hata = document.getElementById("hata_mesaji");
+
+    if (s1 !== s2) {
+        hata.textContent = "❌ Şifreler aynı değil!";
+        return false;
+    }
+    hata.textContent = "";
+    return true;
+}
+</script>
+
+</body>
+</html>

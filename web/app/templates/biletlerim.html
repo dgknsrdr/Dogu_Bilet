@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Biletlerim</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 15px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 16px 34px rgba(0,0,0,0.25);
+            padding: 22px 26px 28px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #b31217;
+        }
+        .tabs {
+            margin-top: 18px;
+            display: inline-flex;
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid #b31217;
+        }
+        .tab {
+            padding: 8px 16px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #b31217;
+            background: #fff;
+        }
+        .tab.active {
+            background: #b31217;
+            color: #fff;
+        }
+        .tab:not(:last-child) {
+            border-right: 1px solid #b31217;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 16px;
+            overflow: hidden;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+        table thead {
+            background: #b31217;
+            color: #fff;
+        }
+        th, td {
+            padding: 9px 7px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+        tbody tr:hover {
+            background: #ffe6e6;
+            transition: 0.15s;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            display: inline-block;
+        }
+        .badge-aktif {
+            background: #e2f8e6;
+            color: #1b7c33;
+            border: 1px solid #7fd28d;
+        }
+        .badge-gecmis {
+            background: #f2f2f2;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        .badge-iade {
+            background: #ffe0e0;
+            color: #b31217;
+            border: 1px solid #f5a2a2;
+        }
+        .btn-iptal {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 999px;
+            border: 1px solid #b31217;
+            background: #fff;
+            color: #b31217;
+            cursor: pointer;
+        }
+        .btn-iptal:hover {
+            background: #b31217;
+            color: #fff;
+        }
+        .bilgi-yok {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+        }
+        .geri-link {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 13px;
+            text-decoration: none;
+            color: #b31217;
+        }
+        .geri-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1>Biletlerim</h1>
+            <a class="geri-link" href="{{ url_for('kullanici_panel') }}">← Kullanıcı paneline dön</a>
+        </div>
+
+        <div class="tabs">
+            <a href="{{ url_for('biletlerim', tip='aktif') }}"
+               class="tab {% if tip == 'aktif' %}active{% endif %}">
+                Aktif Biletler
+            </a>
+            <a href="{{ url_for('biletlerim', tip='gecmis') }}"
+               class="tab {% if tip == 'gecmis' %}active{% endif %}">
+                Geçmiş / İade Biletler
+            </a>
+        </div>
+
+        {% if biletler and biletler|length > 0 %}
+            <table>
+                <thead>
+                <tr>
+                    <th>Kalkış</th>
+                    <th>Varış</th>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                    <th>Firma</th>
+                    <th>Fiyat</th>
+                    <th>Koltuk</th>
+                    <th>Süre</th>
+                    <th>Durum</th>
+                    {% if tip == 'aktif' %}
+                        <th>İşlem</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for b in biletler %}
+                    <tr>
+                        <td>{{ b.kalkis }}</td>
+                        <td>{{ b.varis }}</td>
+                        <td>{{ b.tarih }}</td>
+                        <td>{{ b.saat }}</td>
+                        <td>{{ b.firma }}</td>
+                        <td>{{ b.fiyat }} ₺</td>
+                        <td>{{ b.koltuk_no }}</td>
+                        <td>{{ b.sure }} saat</td>
+                        <td>
+                            {% if b.iade_edildi %}
+                                <span class="badge badge-iade">İade Edildi</span>
+                            {% else %}
+                                {% if b.durum == "Aktif" %}
+                                    <span class="badge badge-aktif">Aktif</span>
+                                {% elif b.durum == "Seyahat tamamlandı" %}
+                                    <span class="badge badge-gecmis">Tamamlandı</span>
+                                {% else %}
+                                    <span class="badge badge-gecmis">{{ b.durum }}</span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        {% if tip == 'aktif' %}
+                            <td>
+                                <form method="post"
+                                      action="{{ url_for('bilet_iade', bilet_id=b.bilet_id) }}"
+                                      onsubmit="return confirm('Bu bileti iptal/iade etmek istediğinize emin misiniz?');">
+                                    <button type="submit" class="btn-iptal">İptal / İade</button>
+                                </form>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="bilgi-yok">
+                {% if tip == 'aktif' %}
+                    Aktif biletiniz bulunmamaktadır.
+                {% else %}
+                    Geçmiş veya iade edilmiş biletiniz bulunmamaktadır.
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
+

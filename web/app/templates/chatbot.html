@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Yapay Zeka Asistanı</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #b31217, #e52d27);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .chat-card {
+            width: 90%;
+            max-width: 900px;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 16px 34px rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 15px 20px;
+            background: #b31217;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .chat-header a {
+            text-decoration: none;
+            color: #b31217;
+            background: #fff;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+        }
+        .chat-body {
+            padding: 15px 20px;
+            height: 450px;
+            overflow-y: auto;
+            background: #f8f8f8;
+        }
+        .msg {
+            max-width: 70%;
+            padding: 10px 12px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .msg.user {
+            margin-left: auto;
+            background: #b31217;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .msg.bot {
+            margin-right: auto;
+            background: #fff;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #eee;
+        }
+        .chat-footer {
+            padding: 10px 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 8px;
+            background: #fafafa;
+        }
+        .chat-footer input {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        .chat-footer button {
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: none;
+            background: #b31217;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .chat-footer button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-card">
+    <div class="chat-header">
+        <h1>Doğu Bilet Yapay Zeka Asistanı</h1>
+        <a href="{{ url_for('kullanici_panel') }}">Panele Dön</a>
+    </div>
+    <div class="chat-body" id="chat-body">
+        <div class="info-text">
+            Merhaba! Ben Doğu Bilet yapay zeka asistanıyım. Sefer arama, bilet alma, iade şartları vb. konularda sorular sorabilirsiniz.
+        </div>
+    </div>
+    <div class="chat-footer">
+        <input id="msg-input" type="text" placeholder="Mesajınızı yazın ve Enter'a basın..." />
+        <button id="send-btn">Gönder</button>
+    </div>
+</div>
+
+<script>
+    const chatBody = document.getElementById("chat-body");
+    const msgInput = document.getElementById("msg-input");
+    const sendBtn = document.getElementById("send-btn");
+
+    function appendMessage(text, role) {
+        const div = document.createElement("div");
+        div.classList.add("msg", role);
+        div.textContent = text;
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const text = msgInput.value.trim();
+        if (!text) return;
+
+        appendMessage(text, "user");
+        msgInput.value = "";
+        msgInput.focus();
+        sendBtn.disabled = true;
+
+        try {
+            const res = await fetch("{{ url_for('chatbot_api') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: text })
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                if (data.error) {
+                    appendMessage("Hata: " + data.error, "bot");
+                } else {
+                    appendMessage("Bir hata oluştu (status: " + res.status + ")", "bot");
+                }
+            } else {
+                if (data.answer) {
+                    appendMessage(data.answer, "bot");
+                } else if (data.error) {
+                    appendMessage("Hata: " + data.error, "bot");
+                } else {
+                    appendMessage("Cevap alınamadı.", "bot");
+                }
+            }
+        } catch (err) {
+            appendMessage("Sunucuya bağlanılamadı: " + err, "bot");
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    msgInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+</script>
+
+</body>
+</html>
+
