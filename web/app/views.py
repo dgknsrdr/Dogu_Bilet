@@ -142,7 +142,7 @@ def admin_istatistik_grafik():
     conn = sqlite3.connect("dogubilet.db")
     cursor = conn.cursor()
 
-    # 1️⃣ Aktif / İade edilen bilet
+    #  Aktif / İade edilen bilet
     cursor.execute("""
         SELECT Iade_Edildi, COUNT(*)
         FROM Biletler
@@ -158,7 +158,7 @@ def admin_istatistik_grafik():
         else:
             iade = adet
 
-    # 2️⃣ Sefer başına satılan bilet
+    #  Sefer başına satılan bilet
     cursor.execute("""
         SELECT Sefer_ID, COUNT(*)
         FROM Biletler
@@ -169,7 +169,7 @@ def admin_istatistik_grafik():
     seferler = [str(s[0]) for s in sefer_bilet]
     sefer_adet = [s[1] for s in sefer_bilet]
 
-    # 3️⃣ Bugün satılan bilet
+    # Bugün satılan bilet
     cursor.execute("""
         SELECT COUNT(*)
         FROM Biletler
@@ -177,7 +177,7 @@ def admin_istatistik_grafik():
     """)
     bugun_bilet = cursor.fetchone()[0]
 
-    # 4️⃣ Genel sayılar
+    #  Genel sayılar
     cursor.execute("SELECT COUNT(*) FROM Kullanici")
     toplam_kullanici = cursor.fetchone()[0]
 
@@ -189,7 +189,7 @@ def admin_istatistik_grafik():
 
     conn.close()
 
-    # 📊 GRAFİKLER
+    #  GRAFİKLER
     fig, axs = plt.subplots(2, 2, figsize=(12, 8))
 
     # Grafik 1: Aktif / İade
@@ -230,7 +230,7 @@ def admin_istatistik_grafik():
 
     plt.tight_layout()
 
-    # 🧠 base64
+    #  base64
     buffer = BytesIO()
     plt.savefig(buffer, format="png")
     buffer.seek(0)
